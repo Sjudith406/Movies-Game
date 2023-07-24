@@ -27,7 +27,7 @@ You will need an API key in order to execute these requests. You can get one [he
 
 # Mockups
 
-![Alt text](https://gitlab.addeteam.fr/adde-public/technical-test-front-end/-/blob/main/mockups.png 'app Mockup')
+![Image info](mockups.png 'app Mockup')
 
 # Rules
 
