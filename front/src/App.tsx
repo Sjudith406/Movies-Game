@@ -1,5 +1,4 @@
 import  {  ChangeEvent, FC, useEffect, useState } from "react";
-import addeLogo from "./images/logo-adde.png"
 import { FilmJeu, TMDBMovieResponse } from "./models/type-data"
 import "./styles/App.css";
 import { Link } from "react-router-dom";

@@ -1,4 +1,3 @@
-import React from 'react';
 // Importe les composants nécessaires de la bibliothèque React Router DOM
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Importe le composant 'Tests' depuis le fichier './App.tsx'
