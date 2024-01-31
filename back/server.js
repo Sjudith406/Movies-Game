@@ -1,7 +1,7 @@
-const http = require('http');
-const app = require('./app.ts')
+import { createServer } from 'http';
+import app, { set } from './app';
 
-app.set('port', 3000)
-const server = http.createServer(app);
+set('port', 3000)
+const server = createServer(app);
 
 server.listen(3000);
