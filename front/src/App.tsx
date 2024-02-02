@@ -10,6 +10,7 @@ const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185";
 function Tests() {
   const [movies, setMovies] = useState<FilmJeu[]>([]);
   const [titleInput, setTitleInput] = useState<string>("")
+  const [score, setScore]= useState<number>(0)
 
   // Importer la clé API depuis le fichier .env
   const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
@@ -18,6 +19,7 @@ function Tests() {
   const searchMovie = async () => {
 
     const loadedFoundMovies = charger();
+    console.log("load : ",loadedFoundMovies.length)
     // lancer la requete
     try {
       const reponse = await fetch(
@@ -38,6 +40,7 @@ function Tests() {
       // si requete echoue; prevenir l'utilisateur
       alert(error);
     }
+
   };
 
   searchMovie();
@@ -46,20 +49,40 @@ function Tests() {
 useEffect(() => {
   const _prochainFilms = movies.map(isFoundMovie(titleInput))
   setMovies(_prochainFilms)
-
-   // Filtrer les films déjà trouvés
-    const filteredMovies = _prochainFilms.filter((film) => film.aEteTrouve);
-    const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
-    if(_prochainFilms.length !== 0) {
-      sauvegarder(foundMovies);
-    }
 },[titleInput])
+
+useEffect(() =>{
+  const filteredMovies = movies.filter((film) => film.aEteTrouve);
+  const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
+  
+    //mettre à jour le score du joueur
+    setScore(filteredMovies.length )
+     if(filteredMovies.length !== 0) {
+      sauvegarder(foundMovies);
+      sendScoreToServer(score)
+    }
+  }, [movies])
+
+useEffect(() =>{
+    console.log("vrai score : ", score)
+  }, [score])
 
 const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
 
   setTitleInput(event.target.value)
-  console.log(event.target.value)
 }
+const sendScoreToServer = async (unScore: number) => {
+    try {
+      const response = await fetch("http://localhost:3100/api/score", {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to send score to server");
+      }
+    } catch (error) {
+      console.error("Error sending score to server:", error);
+    }
+  };
 const handleClickReset = () =>{
     localStorage.clear()
     //  window.location.reload();
@@ -71,6 +94,9 @@ const handleClickReset = () =>{
     <>
       <div className="page-body">
         <h2 className="page-title"> Devine le Film à l'affiche !</h2>
+          <div className="score">
+              <p>Votre score est : {score} / {movies.length}</p>
+            </div>
         <div className="searchMovie">
           <input type="text" className="search-bar" placeholder="Devine le Film à l'affiche !"
           value={titleInput}
@@ -104,7 +130,6 @@ type MovieComponentProps = {
        <>
         <div className="grid-item">
           <div className="post-blurred">
-
             {film.aEteTrouve ?(
                 <Link to={`/movie/${film.id} `}>
                 <img src={posterUrl} className={posterStyle} alt={film.titreOriginal}  /> 
@@ -124,3 +149,19 @@ type MovieComponentProps = {
     }
 
 export default Tests;
+/*  const sendScoreToServer = async (score: number) => {
+    try {
+      const response = await fetch("http://votre-serveur-backend.com/api/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ score }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to send score to server");
+      }
+    } catch (error) {
+      console.error("Error sending score to server:", error);
+    }
+  };*/
