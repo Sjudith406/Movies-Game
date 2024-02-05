@@ -36,8 +36,6 @@ const {movieID} = useParams()
       ))
       setMoviesDetails(detailsDuFilm)
       setcompaniesMovie(LesCompaniesDuFilm)
-      console.log(detailsDuFilm)
-      console.log(LesCompaniesDuFilm)
 
     } catch (error) {
       // si requete echoue; prevenir l'utilisateur
@@ -66,7 +64,7 @@ if(moviesDetails === undefined){
                 <div className="details_film">
                   <p className=""><span>Sortie:</span>    {moviesDetails.release_date}</p>
                   <p className=""><span>Durée:</span> {moviesDetails.runtime} minutes</p>
-                  <p className="genre-container"><span>Genre:</span> {moviesDetails.genres.map( (genre) => (<span className="genre-item">{genre.name}</span>))}</p>
+                  <p className="genre-container"><span>Genre:</span> {moviesDetails.genres.map( (genre) => (<span key={genre.id} className="genre-item">{genre.name}</span>))}</p>
                   <p className=""><span>Résumé:</span>   {moviesDetails.overview}</p>
                   <div className="acteur-grid">
                     {companiesMovie.map((production) =>(<CompaniesComponent key={production.id} production={production}/> ))}
@@ -87,7 +85,12 @@ const CompaniesComponent: FC<CompaniesComponentProps> = ({production}) => {
     <>
       <div className="acteur-item">
         <div className="companie-image">
-          <img src={production.logo_path} alt={production.name} className="acteur" />
+          {
+            production.logo_path?
+           ( <img src={production.logo_path} alt={production.name} className="acteur" />
+           ):(
+           <p>{production.name}</p>)
+          }
         </div>
         <div className="companie-name">
           <p>{production.name}</p>

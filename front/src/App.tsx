@@ -19,7 +19,7 @@ function Tests() {
   const searchMovie = async () => {
 
     const loadedFoundMovies = charger();
-    console.log("load : ",loadedFoundMovies.length)
+    console.log("load : ",loadedFoundMovies)
     // lancer la requete
     try {
       const reponse = await fetch(
@@ -71,10 +71,11 @@ const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
 
   setTitleInput(event.target.value)
 }
-const sendScoreToServer = async (unScore: number) => {
+const sendScoreToServer = async (score: number) => {
     try {
       const response = await fetch("http://localhost:3100/api/score", {
         method: "POST",
+        body: JSON.stringify({ score })
       });
       if (!response.ok) {
         throw new Error("Failed to send score to server");
