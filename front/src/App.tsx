@@ -3,6 +3,7 @@ import { FilmJeu, TMDBMovieResponse } from "./models/type-data"
 import "./styles/App.css";
 import { Link } from "react-router-dom";
 import { charger, isFoundMovie, sauvegarder, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
+import {v4 as uuidv4} from "uuid";
 
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185"; 
@@ -11,7 +12,8 @@ function Tests() {
   const [movies, setMovies] = useState<FilmJeu[]>([]);
   const [titleInput, setTitleInput] = useState<string>("")
   const [score, setScore]= useState<number>(0)
-  const [films_found, setFilms_found] = useState<string[]>([])
+  const [filmsFound, setFilmsFound] = useState<string[]>([])
+  const [playerId, setPlayerId] = useState<string>(uuidv4())
 
   // Importer la clé API depuis le fichier .env
   const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
@@ -37,6 +39,8 @@ function Tests() {
       const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, loadedFoundMovies))
 
       setMovies(tableauDesFilmsDuJeu)
+      //let myId = uuidv4()
+      //console.log("mon identifiant : ", myId)
     } catch (error) {
       // si requete echoue; prevenir l'utilisateur
       alert(error);
@@ -55,7 +59,7 @@ useEffect(() => {
 useEffect(() =>{
   const filteredMovies = movies.filter((film) => film.aEteTrouve);
   const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
-    setFilms_found(foundMovies)
+  setFilmsFound(foundMovies)
     //mettre à jour le score du joueur
     setScore(filteredMovies.length )
      if(filteredMovies.length !== 0) {
@@ -65,21 +69,21 @@ useEffect(() =>{
 
 useEffect(() =>{
     console.log("vrai score : ", score)
-    sendScoreToServer(score, films_found)
+    sendScoreToServer(score, filmsFound)
     console.log("le score envoyer : ", score)
   }, [score])
 
-const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
 
-  setTitleInput(event.target.value)
-}
-const sendScoreToServer = async (score: number, films_found: string[])=> {
+    setTitleInput(event.target.value)
+  }
+  const sendScoreToServer = async (score: number, filmsFound: string[])=> {
     try {
       const response = await fetch("http://localhost:3100/api/score", {
         method: "POST",
         headers:
         {"Content-Type": "application/json",},
-        body: JSON.stringify({ score, films_found })
+        body: JSON.stringify({ score, filmsFound })
         
       });
       if (!response.ok) {
@@ -89,7 +93,7 @@ const sendScoreToServer = async (score: number, films_found: string[])=> {
       console.error("Error sending score to server:", error);
     }
   };
-const handleClickReset = () =>{
+  const handleClickReset = () =>{
     localStorage.clear()
     //  window.location.reload();
     const resetMovies = movies.map((movie) => ({...movie,aEteTrouve: false}))

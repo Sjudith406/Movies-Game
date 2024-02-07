@@ -18,14 +18,18 @@ app.use(express.json())
 
 app.use(express.static("../front/dist"));
 app.post("/api/score", (req, res) => {
-  const { score, films_found } = req.body;
+  const { score, filmsFound } = req.body;
   scoreEnregistrer = score;
-  filmsTrouvés = films_found;
+  filmsTrouvés = filmsFound;
 
   //console.log("Score stocké est : ", score);
   //console.log("film stocké est : ", films_found);
   res.status(200).send("reponse recu ")
 });
+
+app.get("/api/score", (req, res) =>{
+  res.status(200).send("cc me revoilà !!!")
+})
 
 app.listen(3100, () => {
   console.log("server started");
