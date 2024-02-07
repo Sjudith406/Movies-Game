@@ -112,7 +112,7 @@ useEffect(() =>{
 
 useEffect(() =>{
     console.log("vrai score : ", score)
-    sendScoreToServer(score, filmsFound)
+    sendScoreToServer(score, filmsFound, playerId)
     console.log("le score envoyer : ", score)
   }, [score])
 
@@ -120,7 +120,7 @@ useEffect(() =>{
 
     setTitleInput(event.target.value)
   }
-  const sendScoreToServer = async (score: number, filmsFound: string[])=> {
+  const sendScoreToServer = async (score: number, filmsFound: string[], playerId: string)=> {
     try {
       const response = await fetch("http://localhost:3100/api/score", {
         method: "POST",
