@@ -11,6 +11,7 @@ function Tests() {
   const [movies, setMovies] = useState<FilmJeu[]>([]);
   const [titleInput, setTitleInput] = useState<string>("")
   const [score, setScore]= useState<number>(0)
+  const [films_found, setFilms_found] = useState<string[]>([])
 
   // Importer la clé API depuis le fichier .env
   const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
@@ -47,35 +48,39 @@ function Tests() {
 }, []);
 
 useEffect(() => {
-  const _prochainFilms = movies.map(isFoundMovie(titleInput))
-  setMovies(_prochainFilms)
+  const prochainFilms = movies.map(isFoundMovie(titleInput))
+  setMovies(prochainFilms)
 },[titleInput])
 
 useEffect(() =>{
   const filteredMovies = movies.filter((film) => film.aEteTrouve);
   const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
-  
+    setFilms_found(foundMovies)
     //mettre à jour le score du joueur
     setScore(filteredMovies.length )
      if(filteredMovies.length !== 0) {
       sauvegarder(foundMovies);
-      sendScoreToServer(score)
     }
   }, [movies])
 
 useEffect(() =>{
     console.log("vrai score : ", score)
+    sendScoreToServer(score, films_found)
+    console.log("le score envoyer : ", score)
   }, [score])
 
 const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
 
   setTitleInput(event.target.value)
 }
-const sendScoreToServer = async (score: number) => {
+const sendScoreToServer = async (score: number, films_found: string[])=> {
     try {
       const response = await fetch("http://localhost:3100/api/score", {
         method: "POST",
-        body: JSON.stringify({ score })
+        headers:
+        {"Content-Type": "application/json",},
+        body: JSON.stringify({ score, films_found })
+        
       });
       if (!response.ok) {
         throw new Error("Failed to send score to server");
@@ -150,19 +155,4 @@ type MovieComponentProps = {
     }
 
 export default Tests;
-/*  const sendScoreToServer = async (score: number) => {
-    try {
-      const response = await fetch("http://votre-serveur-backend.com/api/score", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ score }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to send score to server");
-      }
-    } catch (error) {
-      console.error("Error sending score to server:", error);
-    }
-  };*/
+
