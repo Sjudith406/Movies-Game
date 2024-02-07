@@ -75,3 +75,18 @@ export function transformerUnTMDBMovieDetailsResponseEnFilmJeuDetails(unTMDBDeta
     production_companies: unTMDBDetails.production_companies
   }
 } 
+/*
+export const sauvegarder = (filmsTrouves: string[]): void => {
+  
+  localStorage.setItem("FILMS", JSON.stringify(filmsTrouves))
+}
+export const charger = (): string[] => {
+  const value = localStorage.getItem("FILMS")
+  if (value === null){
+    return []
+  }
+  else {
+    return JSON.parse(value)
+  }
+}
+*/

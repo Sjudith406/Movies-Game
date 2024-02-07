@@ -8,12 +8,55 @@ import {v4 as uuidv4} from "uuid";
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185"; 
 
+export const sauvegarderId = (identifiant: string): void => {
+  
+  localStorage.setItem("idJoueur", identifiant)
+}
+export const chargerId = (): string => {
+  const value = localStorage.getItem("idJoueur")
+  if (value === null){
+    return ""
+  }
+  else {
+    return value
+  }
+}
+
+
 function Tests() {
   const [movies, setMovies] = useState<FilmJeu[]>([]);
   const [titleInput, setTitleInput] = useState<string>("")
   const [score, setScore]= useState<number>(0)
   const [filmsFound, setFilmsFound] = useState<string[]>([])
-  const [playerId, setPlayerId] = useState<string>(uuidv4())
+  const [playerId, setPlayerId] = useState<string>("")
+
+
+  /*
+    useEffect(() => {
+    const idFromlocalStorage = localStorage.getItem("playerId")
+    if(idFromlocalStorage) {
+      setPlayerId(idFromlocalStorage)
+    }
+    else{
+      const newP = uuidv4()
+      setPlayerId(newP)
+      localStorage.setItem("playerId", newP)
+    }
+   }, []) 
+  */
+  
+   useEffect(() => {
+    const idFromlocalStorage = chargerId()
+    if(idFromlocalStorage) {
+      setPlayerId(idFromlocalStorage)
+    }
+    else{
+      const newP = uuidv4()
+      setPlayerId(newP)
+      sauvegarderId(newP)
+    }
+    console.log("mon iidd : ", playerId)
+   }, []) 
 
   // Importer la clé API depuis le fichier .env
   const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
@@ -83,7 +126,7 @@ useEffect(() =>{
         method: "POST",
         headers:
         {"Content-Type": "application/json",},
-        body: JSON.stringify({ score, filmsFound })
+        body: JSON.stringify({ score, filmsFound, playerId })
         
       });
       if (!response.ok) {
