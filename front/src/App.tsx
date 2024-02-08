@@ -43,7 +43,7 @@ function Tests() {
         const films = donnees.filmsTrouvesParLeJoueur
         setScore(scoreJoueur)
         setFilmsFound(films)//filmsFound
-        console.log("film trouver : ", filmsFound)
+        console.log("film trouver : ", donnees)
   
       } catch (error) {
         alert(error)
