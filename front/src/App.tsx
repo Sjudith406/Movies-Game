@@ -16,21 +16,6 @@ function Tests() {
   const [score, setScore]= useState<number>(0)
   const [filmsFound, setFilmsFound] = useState<string[]>([])
   const [playerId, setPlayerId] = useState<string>(chargerId())
-
-
-  /*
-    useEffect(() => {
-    const idFromlocalStorage = localStorage.getItem("playerId")
-    if(idFromlocalStorage) {
-      setPlayerId(idFromlocalStorage)
-    }
-    else{
-      const newP = uuidv4()
-      setPlayerId(newP)
-      localStorage.setItem("playerId", newP)
-    }
-   }, []) 
-  */
   
    useEffect(() => {
 
@@ -65,7 +50,7 @@ function Tests() {
       }
     }
     JoueurDonnees()
-  }, [])
+  }, [playerId])
 
   useEffect(() => {
   const searchMovie = async () => {

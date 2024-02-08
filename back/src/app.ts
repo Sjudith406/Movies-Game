@@ -42,7 +42,6 @@ const laSauvegarde = toutesLesSauvegardesParUtilisateur[req.params.userID]
 if (!laSauvegarde) {
   return res.status(400).send('PTDR T KI')
 }
-
   res.status(200).json(laSauvegarde);
 });
 
