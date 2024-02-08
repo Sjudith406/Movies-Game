@@ -1,26 +1,13 @@
 import  {  ChangeEvent, FC, useEffect, useState } from "react";
-import { FilmJeu, TMDBMovieResponse } from "./models/type-data"
+import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/type-data"
 import "./styles/App.css";
 import { Link } from "react-router-dom";
-import { charger, isFoundMovie, sauvegarder, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
+import { charger, chargerId, isFoundMovie, sauvegarder, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
 import {v4 as uuidv4} from "uuid";
 
 
-const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185"; 
 
-export const sauvegarderId = (identifiant: string): void => {
-  
-  localStorage.setItem("idJoueur", identifiant)
-}
-export const chargerId = (): string => {
-  const value = localStorage.getItem("idJoueur")
-  if (value === null){
-    return ""
-  }
-  else {
-    return value
-  }
-}
+const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185"; 
 
 
 function Tests() {
@@ -28,7 +15,7 @@ function Tests() {
   const [titleInput, setTitleInput] = useState<string>("")
   const [score, setScore]= useState<number>(0)
   const [filmsFound, setFilmsFound] = useState<string[]>([])
-  const [playerId, setPlayerId] = useState<string>("")
+  const [playerId, setPlayerId] = useState<string>(chargerId())
 
 
   /*
@@ -46,11 +33,8 @@ function Tests() {
   */
   
    useEffect(() => {
-    const idFromlocalStorage = chargerId()
-    if(idFromlocalStorage) {
-      setPlayerId(idFromlocalStorage)
-    }
-    else{
+
+    if (playerId === ""){
       const newP = uuidv4()
       setPlayerId(newP)
       sauvegarderId(newP)
@@ -61,11 +45,33 @@ function Tests() {
   // Importer la clé API depuis le fichier .env
   const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
 
+  
+  useEffect(() => {
+    const JoueurDonnees = async () => {
+      try{
+        const reponse = await fetch(`http://localhost:3100/api/score/${playerId}`);
+        if (reponse.status != 200) {
+          throw new Error(reponse.status.toString());
+        }
+        const donnees: DonneeSauvegarder = await reponse.json()
+        const scoreJoueur = donnees.scoreUser
+        const films = donnees.filmsTrouvesParLeJoueur
+        setScore(scoreJoueur)
+        setFilmsFound(films)//filmsFound
+        console.log("film trouver : ", filmsFound)
+  
+      } catch (error) {
+        alert(error)
+      }
+    }
+    JoueurDonnees()
+  }, [])
+
   useEffect(() => {
   const searchMovie = async () => {
 
-    const loadedFoundMovies = charger();
-    console.log("load : ",loadedFoundMovies)
+    //const loadedFoundMovies = charger();
+    //console.log("load : ",loadedFoundMovies)
     // lancer la requete
     try {
       const reponse = await fetch(
@@ -79,7 +85,7 @@ function Tests() {
        const data: TMDBMovieResponse = await reponse.json();
      // si requete reussi; extraire le resultat
       const tableauDesFilmsBruts = data.results; 
-      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, loadedFoundMovies))
+      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, filmsFound))
 
       setMovies(tableauDesFilmsDuJeu)
       //let myId = uuidv4()
@@ -106,7 +112,7 @@ useEffect(() =>{
     //mettre à jour le score du joueur
     setScore(filteredMovies.length )
      if(filteredMovies.length !== 0) {
-      sauvegarder(foundMovies);
+      //sauvegarder(foundMovies);
     }
   }, [movies])
 
@@ -184,7 +190,7 @@ type MovieComponentProps = {
         <div className="grid-item">
           <div className="post-blurred">
             {film.aEteTrouve ?(
-                <Link to={`/movie/${film.id} `}>
+                <Link to={`/movie/${film.id}`}>
                 <img src={posterUrl} className={posterStyle} alt={film.titreOriginal}  /> 
                 </Link>
                 ):(

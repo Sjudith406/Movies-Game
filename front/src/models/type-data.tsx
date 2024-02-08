@@ -85,3 +85,10 @@ export type FilmJeuDetails = {
     production_companies: company[]
 
 }
+
+export type DonneeSauvegarder = {
+    IdUser : string
+    scoreUser : number
+    filmsTrouvesParLeJoueur : string[]
+  }
+  

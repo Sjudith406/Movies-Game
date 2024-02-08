@@ -59,6 +59,19 @@ export const charger = (): string[] => {
   }
 }
 
+export const sauvegarderId = (identifiant: string): void => {
+  
+  localStorage.setItem("idJoueur", identifiant)
+}
+export const chargerId = (): string => {
+  const value = localStorage.getItem("idJoueur")
+  if (value === null){
+    return ""
+  }
+  else {
+    return value
+  }
+}
 export function transformerUnTMDBMovieDetailsResponseEnFilmJeuDetails(unTMDBDetails:TMDBMovieDetailsResponse): FilmJeuDetails {
   
   const unPosterURL = `${debutURLaffichagePosterDetails}${unTMDBDetails.poster_path}`
