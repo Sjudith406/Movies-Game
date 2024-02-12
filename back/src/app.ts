@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
+
 /**
  * charger les donnees du cache depuis lefichier lors du demarrage du serveur
  */
@@ -40,8 +41,13 @@ const toutesLesSauvegardesParUtilisateur : Record<string, Sauvegarde> = Chager()
  * @param lesSauvegardes 
  */
 const saveCache = ((lesSauvegardes : Record<string, Sauvegarde>) => {
-  const donneesConvertis = JSON.stringify(lesSauvegardes)
-  fs.writeFileSync(cacheFile, donneesConvertis, "utf8")
+  try{
+    const donneesConvertis = JSON.stringify(lesSauvegardes)
+    fs.writeFileSync(cacheFile, donneesConvertis, "utf8")
+    console.log("Données du cache enregistrées avec succès !");
+  }catch(error){
+    console.error("Erreur lors de l'enregistrement du cache :", error);
+  }
 })
 
 app.use(express.static("../front/dist"));
@@ -55,14 +61,11 @@ const uneSauvegarde : Sauvegarde = {
 } 
 
 toutesLesSauvegardesParUtilisateur[playerId] = uneSauvegarde
-//const lesSauvegardesParUtilisateur = toutesLesSauvegardesParUtilisateur[playerId]
 saveCache(toutesLesSauvegardesParUtilisateur)
 console.log("id stocké est : ", toutesLesSauvegardesParUtilisateur);
-  //console.log("Score stocké est : ", score);
-  //console.log("film stocké est : ", films_found);
-  //console.log("id stocké est : ", playerId);
   res.status(200).send("reponse recu ");
 });
+  
 
 app.get("/api/score/:userID", (req, res) => {
 const laSauvegarde = toutesLesSauvegardesParUtilisateur[req.params.userID]

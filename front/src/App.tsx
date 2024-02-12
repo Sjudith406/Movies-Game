@@ -2,10 +2,11 @@ import  {  ChangeEvent, FC, useEffect, useState } from "react";
 import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/type-data"
 import "./styles/App.css";
 import { Link } from "react-router-dom";
-import { charger, chargerId, isFoundMovie, sauvegarder, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
+import { chargerId, isFoundMovie, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
 import {v4 as uuidv4} from "uuid";
 
-
+// Importer la clé API depuis le fichier .env
+const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185"; 
 
@@ -27,16 +28,13 @@ function Tests() {
       setPlayerId(newP)
       sauvegarderId(newP)
     }
-    console.log("mon iidd : ", playerId)
-   }, []) 
-
-  // Importer la clé API depuis le fichier .env
-  const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
+    console.log("mon uuid : ", playerId)
+   }, [playerId]) 
 
   /**
    * récupérer les données du joueur
    */
-  useEffect(() => {
+  /*useEffect(() => {
     const JoueurDonnees = async () => {
       try{
         const reponse = await fetch(`http://localhost:3100/api/score/${playerId}`);
@@ -47,24 +45,21 @@ function Tests() {
         const scoreJoueur = donnees.scoreUser
         const films = donnees.filmsTrouvesParLeJoueur
         setScore(scoreJoueur)
-        setFilmsFound(films)//filmsFound
+        setFilmsFound(films)
         console.log("film trouver : ", donnees)
-  
       } catch (error) {
         alert(error)
       }
     }
     JoueurDonnees()
-  }, [playerId])
+  }, [playerId])*/
 
   /**
    * récupérer les films
    */
-  useEffect(() => {
+  /*useEffect(() => {
   const searchMovie = async () => {
 
-    //const loadedFoundMovies = charger();
-    //console.log("load : ",loadedFoundMovies)
     // lancer la requete
     try {
       const reponse = await fetch(
@@ -74,29 +69,55 @@ function Tests() {
       if (reponse.status != 200) {
         throw new Error(reponse.status.toString());
       }
-
        const data: TMDBMovieResponse = await reponse.json();
      // si requete reussi; extraire le resultat
       const tableauDesFilmsBruts = data.results; 
-      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, filmsFound
-      ))
+      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, []))
 
       setMovies(tableauDesFilmsDuJeu)
-      //let myId = uuidv4()
-      //console.log("mon identifiant : ", myId)
     } catch (error) {
       // si requete echoue; prevenir l'utilisateur
       alert(error);
     }
-
   };
-
   searchMovie();
-}, []);
+}, []);*/
 
 useEffect(() => {
-  const prochainFilms = movies.map(isFoundMovie(titleInput))
-  setMovies(prochainFilms)
+  const fetchDonnees = async () => {
+    try {
+      // Récupérer les données du joueur
+      const joueurResponse = await fetch(`http://localhost:3100/api/score/${playerId}`);
+      if (joueurResponse.status !== 200) {
+        throw new Error(joueurResponse.status.toString());
+      }
+      const joueurData: DonneeSauvegarder = await joueurResponse.json();
+      const scoreJoueur = joueurData.scoreUser;
+      const films = joueurData.filmsTrouvesParLeJoueur;
+      setScore(scoreJoueur);
+      setFilmsFound(films);
+      console.log("Films trouvés par le joueur :", joueurData);
+
+      // Récupérer les films depuis l'API TMDB
+      const tmdbResponse = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&page=1&api_key=${TMDB_KEY}`);
+  
+      if (tmdbResponse.status !== 200) {
+        throw new Error(tmdbResponse.status.toString());
+      }
+      const tmdbData: TMDBMovieResponse = await tmdbResponse.json();
+      const tableauDesFilmsBruts = tmdbData.results;
+      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, films));
+      setMovies(tableauDesFilmsDuJeu);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  fetchDonnees();
+}, [playerId]);
+
+useEffect(() => {
+  setMovies((previousValue) => previousValue.map(isFoundMovie(titleInput)))
 },[titleInput])
 
 /** 
@@ -106,6 +127,7 @@ useEffect(() =>{
   const filteredMovies = movies.filter((film) => film.aEteTrouve);
   const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
   setFilmsFound(foundMovies)
+  console.log("foundMovies : ", foundMovies)
     //mettre à jour le score du joueur
     setScore(filteredMovies.length )
      if(filteredMovies.length !== 0) {
@@ -119,8 +141,9 @@ useEffect(() =>{
 useEffect(() =>{
     console.log("vrai score : ", score)
     sendScoreToServer(score, filmsFound, playerId)
+    console.log("lesFilmsEnvoyer : ",filmsFound )
     console.log("le score envoyer : ", score)
-  }, [score])
+  }, [filmsFound, playerId, score])
 
   /**
    * récupération titre saisis
