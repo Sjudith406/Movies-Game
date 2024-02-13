@@ -1,0 +1,21 @@
+/*"a97e7d53-9129-46d9-a514-5a361a2080cc":{"user":"a97e7d53-9129-46d9-a514-5a361a2080cc"}
+je veux verifie les donnees recuperer avant de les enregistrer dans le cache
+
+ // Vérifier si les données reçues sont valides avant de les enregistrer dans le cache
+  if (!playerId || !score || !filmsFound || typeof score !== 'number' || !Array.isArray(filmsFound)) {
+    return res.status(400).send('Données invalides');
+  }
+  
+
+  // Vérifier si les données ne sont pas vides
+  if (filmsFound.length === 0) {
+    return res.status(400).send('Films trouvés non définis');
+  }
+
+  // Vérifier si les films trouvés par le joueur sont valides
+  const invalidFilms = filmsFound.filter(film => typeof film !== 'string' || film.trim() === '');
+  if (invalidFilms.length > 0) {
+    return res.status(400).send('Films trouvés invalides');
+  }
+  nous vérifions d'abord si unLoadedFoundMovies est défini avant d'utiliser find sur celui-ci. Si unLoadedFoundMovies est undefined, nous retournons également undefined pour filmCharge.
+*/

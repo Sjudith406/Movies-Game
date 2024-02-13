@@ -54,6 +54,12 @@ app.use(express.static("../front/dist"));
 app.post("/api/score", (req, res) => {
   const {  playerId, score, filmsFound} = req.body;
   console.log(req.body)
+
+  // verifie si les données recues sont valides avant de les enregistrer dans le cache
+  if (!playerId || !score || !filmsFound || typeof score !== 'number' || !Array.isArray(filmsFound)) {
+    return res.status(400).send('Les donnees sont invalides');
+  }  
+  
 const uneSauvegarde : Sauvegarde = {
   user: playerId,
   score: score,
