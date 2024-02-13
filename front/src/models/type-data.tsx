@@ -92,3 +92,6 @@ export type DonneeSauvegarder = {
     filmsTrouvesParLeJoueur : string[]
   }
   
+export type MovieComponentProps = {
+    film: FilmJeu
+  }

@@ -1,5 +1,7 @@
-import {FilmBrute, FilmJeu} from "../models/type-data"
+import { FC } from "react";
+import {FilmBrute, FilmJeu, MovieComponentProps} from "../models/type-data"
 import { FilmJeuDetails, TMDBMovieDetailsResponse } from "../models/type-data"
+import { Link } from "react-router-dom";
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185";
 const debutURLaffichagePosterDetails = "https://image.tmdb.org/t/p/w342";
@@ -36,17 +38,31 @@ export const isFoundMovie = (uneProposition:string)=> (unFilmJeu:FilmJeu):FilmJe
 export function transformerUnFilmBruteEnFilmJeu(unFilmBrute:FilmBrute, unLoadedFoundMovies:string[]): FilmJeu {
   const unTitreCache = TextHidden(unFilmBrute.title)
   const unPosterURL = `${debutURLaffichagePoster}${unFilmBrute.poster_path}`
-    const filmCharge = unLoadedFoundMovies.find((loadedFilm) => loadedFilm === unFilmBrute.title);
+    const filmCharger = unLoadedFoundMovies.find((loadedFilm) => loadedFilm === unFilmBrute.title);
   return {
     id: unFilmBrute.id,
     titreCache: unTitreCache,
     titreOriginal: unFilmBrute.title,
     posterURL: unPosterURL,
-    aEteTrouve: filmCharge ? true : false
+    aEteTrouve: filmCharger ? true : false
   }
 } 
 
-export const sauvegarder = (filmsTrouves: string[]): void => {
+//brouillon
+// eslint-disable-next-line react-refresh/only-export-components
+export function transformerFilmBruteEnFilmJeu(unFilmBrute:FilmBrute): FilmJeu {
+  const unTitreCache = TextHidden(unFilmBrute.title)
+  const unPosterURL = `${debutURLaffichagePoster}${unFilmBrute.poster_path}`
+  return {
+    id: unFilmBrute.id,
+    titreCache: unTitreCache,
+    titreOriginal: unFilmBrute.title,
+    posterURL: unPosterURL,
+    aEteTrouve: false
+  }
+} 
+
+/*export const sauvegarder = (filmsTrouves: string[]): void => {
   
   localStorage.setItem("FILMS", JSON.stringify(filmsTrouves))
 }
@@ -58,7 +74,7 @@ export const charger = (): string[] => {
   else {
     return JSON.parse(value)
   }
-}
+}*/
 
 export const sauvegarderId = (identifiant: string): void => {
   
@@ -89,3 +105,34 @@ export function transformerUnTMDBMovieDetailsResponseEnFilmJeuDetails(unTMDBDeta
     production_companies: unTMDBDetails.production_companies
   }
 } 
+
+// Movie Item
+
+export const MovieComponent: FC<MovieComponentProps> = ({film}) => {
+  // Construire l'URL complet du poster en utilisant le chemin du poster du film
+const posterUrl = `${debutURLaffichagePoster}${film.posterURL}`;
+
+  const posterStyle =  film.aEteTrouve ?  
+       "poster" : "poster blur"
+
+   return  (
+   <>
+    <div className="grid-item">
+      <div className="post-blurred">
+        {film.aEteTrouve ?(
+            <Link to={`/movie/${film.id}`}>
+            <img src={posterUrl} className={posterStyle} alt={film.titreOriginal}  /> 
+            </Link>
+            ):(
+              <img src={posterUrl} className={posterStyle} alt={film.titreOriginal} /> )}
+      </div>
+      <div className="movie-title">
+        {film.aEteTrouve ?  
+        (<p className="show-title">{film.titreOriginal}</p>
+        ):(
+        <p className="hide-title">{film.titreCache}</p>)  }
+      </div>
+    </div>
+
+    </>)
+  }  
