@@ -1,5 +1,4 @@
 import  {ChangeEvent, useEffect, useState } from "react";
-
 import { MovieComponent, chargerId, isFoundMovie, sauvegarderId, transformerFilmBruteEnFilmJeu } from "./fonctions/function-utils";
 import {v4 as uuidv4} from "uuid";
 import { FilmJeu, TMDBMovieResponse } from "./models/type-data";
@@ -65,7 +64,7 @@ function Tests(){
      * @param event 
      */
     const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
-        //si il n'y a pas de film on a pas la possibilite d'ecrire dans le input
+        //si il n'y a pas de film on a pas la possibilite d'ecrire dans le input (je sors de la fonction)
         if(movies.length === 0) {
             return;
         }
@@ -90,7 +89,6 @@ function Tests(){
     }, [movies])
 
     useEffect(() =>{
-        //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
         sendScoreToServer(score, filmsFound, playerId)
         // console.log("vrai score : ", score)
         // console.log("lesFilmsEnvoyer : ",filmsFound )
