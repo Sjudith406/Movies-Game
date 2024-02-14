@@ -90,9 +90,25 @@ function Tests(){
         setTitleInput(event.target.value)
     }
     //bouton recommencer
-    const handleClickReset = () =>{
+    const handleClickReset = async () =>{
+      /**
+       * await fetch(`http://localhost:3100/api/score/${playerId}`);
+       */
+      try{
+        const supprimeCache = await fetch(`http://localhost:3100/api/score/${playerId}`, {
+          method: "DELETE"
+        });
+        if (supprimeCache.status !== 200) {
+          console.log("je n'ai pas eu de reponse du serveur !!!")
+          throw new Error("Failed to send requeste to server");
+        }
+
+        //met à jour les films 
         const resetMovies = movies.map((movie) => ({...movie,aEteTrouve: false}))
         setMovies(resetMovies)
+      }catch (error){
+        alert (error)
+      }
     }
 
     /** 

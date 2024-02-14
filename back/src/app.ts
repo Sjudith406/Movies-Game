@@ -33,7 +33,7 @@ const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Chager();
  */
 const saveCache = (lesSauvegardes: Record<string, Sauvegarde>) => {
   try {
-    const donneesConvertis = JSON.stringify(lesSauvegardes,null, 4);
+    const donneesConvertis = JSON.stringify(lesSauvegardes, null, 4);
     fs.writeFileSync(cacheFile, donneesConvertis, "utf8");
     console.log("Données du cache enregistrées avec succès !");
   } catch (error) {
@@ -97,8 +97,23 @@ app.get("/api/score/:userID", (req, res) => {
  * supprimer les donnees du joueur
  */
 app.delete("/api/score/:userID", (req, res) => {
-  
-})
+  const userId = req.params.userID;
+  const sauvegardeDuJoueur = toutesLesSauvegardesParUtilisateur[userId];
+  //Je verifie si l'utilisateur existe et s'il a une sauvegarde enrégistrer
+  if (!sauvegardeDuJoueur) {
+    return res.status(400).send("Le joueur n'a aucune sauvegarde !!!");
+  }
+  console.log("les données a supprimés : ", sauvegardeDuJoueur);
+  //si l'utilisateur a bien une sauvegarde je le supprime
+  delete toutesLesSauvegardesParUtilisateur[userId];
+
+  //j'enrégistre la nouvelle mis à jour des données
+  saveCache(toutesLesSauvegardesParUtilisateur);
+
+  res
+    .status(200)
+    .send(`La sauvegarde du joueur ${userId} a bien été supprimée !!`);
+});
 app.listen(3100, () => {
   console.log("server started");
 });
