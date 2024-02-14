@@ -1,14 +1,15 @@
 import  {ChangeEvent, useEffect, useState } from "react";
-import { MovieComponent, chargerId, isFoundMovie, sauvegarderId, transformerFilmBruteEnFilmJeu } from "./fonctions/function-utils";
+
+import { chargerId, isFoundMovie, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
 import {v4 as uuidv4} from "uuid";
-import { FilmJeu, TMDBMovieResponse } from "./models/type-data";
+import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/type-data";
 import "./styles/App.css"
 import { sendScoreToServer } from "./fonctions/function-server";
+import { MovieComponent } from "./fonctions/component";
 
 
 // Importer la clé API depuis le fichier .env
 const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
-
 
 function Tests(){
     const [playerId, setPlayerId] = useState<string>(chargerId());
@@ -16,7 +17,7 @@ function Tests(){
     const [titleInput, setTitleInput] = useState<string>("")
     const [filmsFound, setFilmsFound] = useState<string[]>([])
     const [score, setScore]= useState<number>(0)
-
+    const [scoreState, setScoreState] = useState<boolean>(false)
 
    /**
    * identifiaant du joueur
@@ -33,26 +34,47 @@ function Tests(){
 
    useEffect(() =>{
     const fetchData = async () =>{
-        try {
-            // Récupérer les films depuis l'API TMDB
-      const tmdbResponse = await fetch(
-        `https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&page=1&api_key=${TMDB_KEY}`
-      )
-      if (tmdbResponse.status !== 200) {
-        console.log("je n'ai pas eu de reponse de TMDB !!");
-        throw new Error(tmdbResponse.status.toString());
-      }
-      const tmdbData: TMDBMovieResponse = await tmdbResponse.json();
-      const tableauDesFilmsBruts = tmdbData.results;
-      const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerFilmBruteEnFilmJeu(movie));
-      setMovies(tableauDesFilmsDuJeu);
-        } catch (error) {
-            alert(error)
+      try {
+              // Récupérer les films depuis l'API TMDB
+        const tmdbResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&page=1&api_key=${TMDB_KEY}`
+        )
+        if (tmdbResponse.status !== 200) {
+          console.log("je n'ai pas eu de reponse de TMDB !!");
+          throw new Error(tmdbResponse.status.toString());
         }
-    } 
-    fetchData()
+        const tmdbData: TMDBMovieResponse = await tmdbResponse.json();
+        const tableauDesFilmsBruts = tmdbData.results;
 
-   }, [])
+        // Récupérer les données du joueur
+        const joueurResponse = await fetch(`http://localhost:3100/api/score/${playerId}`);
+        if (joueurResponse.status !== 200) {
+          console.log("je n'ai pas eu de reponse du serveur !!");
+          throw new Error(joueurResponse.status.toString());
+        }
+        const joueurData: DonneeSauvegarder = await joueurResponse.json();
+        const scoreJoueur = joueurData.score;
+        const films = joueurData.filmsTrouves;
+
+        const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, films));
+      
+        
+        console.log("Films trouvés par le joueur :", joueurData);
+        /*
+        const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerFilmBruteEnFilmJeu(movie));
+        const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, films));
+        */
+        setScore(scoreJoueur);
+        setFilmsFound(films);
+        setMovies(tableauDesFilmsDuJeu);
+      } catch (error) {
+          alert(error)
+      }
+    } 
+    if (playerId !== "") {
+      fetchData()
+    }
+   }, [playerId])
 
    //met a jour les films chaque fois que le joueur trouve un film(remplis le input)
     useEffect(() => {
@@ -64,17 +86,14 @@ function Tests(){
      * @param event 
      */
     const handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
-        //si il n'y a pas de film on a pas la possibilite d'ecrire dans le input (je sors de la fonction)
-        if(movies.length === 0) {
-            return;
-        }
+        //si il n'y a pas de film on a pas la possibilite d'ecrire dans le input
         setTitleInput(event.target.value)
     }
     //bouton recommencer
     const handleClickReset = () =>{
         const resetMovies = movies.map((movie) => ({...movie,aEteTrouve: false}))
         setMovies(resetMovies)
-      }
+    }
 
     /** 
     * les films trouvés
@@ -89,11 +108,20 @@ function Tests(){
     }, [movies])
 
     useEffect(() =>{
-        sendScoreToServer(score, filmsFound, playerId)
+        if(score > 0){
+          setScoreState(true)
+        }
+    }, [score])
+
+    useEffect(() =>{
+        //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
+        if(scoreState === true && filmsFound && playerId){
+          sendScoreToServer(score, filmsFound, playerId)
+        }
         // console.log("vrai score : ", score)
         // console.log("lesFilmsEnvoyer : ",filmsFound )
         // console.log("le score envoyer : ", score)
-      }, [filmsFound, playerId, score])
+    }, [filmsFound, playerId, score, scoreState])
   
     return (
         <>
@@ -104,7 +132,7 @@ function Tests(){
                 </div>
             <div className="searchMovie">
               <input type="text" className="search-bar" placeholder="Devine le Film à l'affiche !" 
-              value={titleInput} onChange={handleInputChange} ></input>
+              value={titleInput} disabled={movies.length === 0} onChange={handleInputChange} ></input>
               <button className="btn-restart" onClick={handleClickReset}>recommencer</button>
             </div>
     

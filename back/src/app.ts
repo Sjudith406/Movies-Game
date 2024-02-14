@@ -2,12 +2,7 @@ import express from "express";
 // import apiRoute from './routes/api.Route'
 import fs from "fs";
 import cors from "cors";
-
-type Sauvegarde = {
-  user: string;
-  score: number;
-  filmsTrouves: string[];
-};
+import { Sauvegarde } from "./models/typeData";
 
 const app = express();
 const cacheFile = "./cache.json";
@@ -38,7 +33,7 @@ const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Chager();
  */
 const saveCache = (lesSauvegardes: Record<string, Sauvegarde>) => {
   try {
-    const donneesConvertis = JSON.stringify(lesSauvegardes);
+    const donneesConvertis = JSON.stringify(lesSauvegardes,null, 4);
     fs.writeFileSync(cacheFile, donneesConvertis, "utf8");
     console.log("Données du cache enregistrées avec succès !");
   } catch (error) {
@@ -63,6 +58,7 @@ app.post("/api/score", (req, res) => {
     typeof score !== "number" ||
     !Array.isArray(filmsFound)
   ) {
+    //console.log("les donnees recues sont : ", playerId)
     return res.status(400).send("Les donnees envoyees sont invalides");
   }
 
@@ -97,6 +93,12 @@ app.get("/api/score/:userID", (req, res) => {
   res.status(200).json(laSauvegarde);
 });
 
+/**
+ * supprimer les donnees du joueur
+ */
+app.delete("/api/score/:userID", (req, res) => {
+  
+})
 app.listen(3100, () => {
   console.log("server started");
 });

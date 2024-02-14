@@ -102,13 +102,11 @@ useEffect(() => {
         throw new Error(joueurResponse.status.toString());
       }
       const joueurData: DonneeSauvegarder = await joueurResponse.json();
-      const scoreJoueur = joueurData.scoreUser;
-      const films = joueurData.filmsTrouvesParLeJoueur;
+      const scoreJoueur = joueurData.score;
+      const films = joueurData.filmsTrouves;
       setScore(scoreJoueur);
       setFilmsFound(films);
       console.log("Films trouvés par le joueur :", joueurData);
-
-      
     } catch (error) {
       alert(error);
     }

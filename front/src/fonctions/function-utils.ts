@@ -1,7 +1,5 @@
-import { FC } from "react";
-import {FilmBrute, FilmJeu, MovieComponentProps} from "../models/type-data"
+import {FilmBrute, FilmJeu} from "../models/type-data"
 import { FilmJeuDetails, TMDBMovieDetailsResponse } from "../models/type-data"
-import { Link } from "react-router-dom";
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185";
 const debutURLaffichagePosterDetails = "https://image.tmdb.org/t/p/w342";
@@ -19,7 +17,6 @@ export function TextHidden(titreDuFilm: string){
   return charOTitle
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const isFoundMovie = (uneProposition:string)=> (unFilmJeu:FilmJeu):FilmJeu =>{
   
   if(unFilmJeu.aEteTrouve){
@@ -49,7 +46,7 @@ export function transformerUnFilmBruteEnFilmJeu(unFilmBrute:FilmBrute, unLoadedF
 } 
 
 //brouillon
-// eslint-disable-next-line react-refresh/only-export-components
+
 export function transformerFilmBruteEnFilmJeu(unFilmBrute:FilmBrute): FilmJeu {
   const unTitreCache = TextHidden(unFilmBrute.title)
   const unPosterURL = `${debutURLaffichagePoster}${unFilmBrute.poster_path}`
@@ -106,33 +103,4 @@ export function transformerUnTMDBMovieDetailsResponseEnFilmJeuDetails(unTMDBDeta
   }
 } 
 
-// Movie Item
 
-export const MovieComponent: FC<MovieComponentProps> = ({film}) => {
-  // Construire l'URL complet du poster en utilisant le chemin du poster du film
-const posterUrl = `${debutURLaffichagePoster}${film.posterURL}`;
-
-  const posterStyle =  film.aEteTrouve ?  
-       "poster" : "poster blur"
-
-   return  (
-   <>
-    <div className="grid-item">
-      <div className="post-blurred">
-        {film.aEteTrouve ?(
-            <Link to={`/movie/${film.id}`}>
-            <img src={posterUrl} className={posterStyle} alt={film.titreOriginal}  /> 
-            </Link>
-            ):(
-              <img src={posterUrl} className={posterStyle} alt={film.titreOriginal} /> )}
-      </div>
-      <div className="movie-title">
-        {film.aEteTrouve ?  
-        (<p className="show-title">{film.titreOriginal}</p>
-        ):(
-        <p className="hide-title">{film.titreCache}</p>)  }
-      </div>
-    </div>
-
-    </>)
-  }  

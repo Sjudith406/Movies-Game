@@ -87,9 +87,9 @@ export type FilmJeuDetails = {
 }
 
 export type DonneeSauvegarder = {
-    IdUser : string
-    scoreUser : number
-    filmsTrouvesParLeJoueur : string[]
+    user : string
+    score : number
+    filmsTrouves : string[]
   }
   
 export type MovieComponentProps = {

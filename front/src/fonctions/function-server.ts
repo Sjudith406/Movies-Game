@@ -1,5 +1,4 @@
 /**
- *
  * @param score
  * @param filmsFound
  * @param playerId
