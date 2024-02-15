@@ -22,8 +22,4 @@ export const sendScoreToServer = async (
   }
 };
 //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
-/* 
-  if(typeof score !== 'number'|| !filmFound || !playerId){
-    return;
-  }
-  */
+

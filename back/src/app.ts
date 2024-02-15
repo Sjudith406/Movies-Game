@@ -58,7 +58,6 @@ app.post("/api/score", (req, res) => {
     typeof score !== "number" ||
     !Array.isArray(filmsFound)
   ) {
-    //console.log("les donnees recues sont : ", playerId)
     return res.status(400).send("Les donnees envoyees sont invalides");
   }
 
@@ -103,13 +102,11 @@ app.delete("/api/score/:userID", (req, res) => {
   if (!sauvegardeDuJoueur) {
     return res.status(400).send("Le joueur n'a aucune sauvegarde !!!");
   }
-  console.log("les données a supprimés : ", sauvegardeDuJoueur);
   //si l'utilisateur a bien une sauvegarde je le supprime
   delete toutesLesSauvegardesParUtilisateur[userId];
 
   //j'enrégistre la nouvelle mis à jour des données
   saveCache(toutesLesSauvegardesParUtilisateur);
-
   res
     .status(200)
     .send(`La sauvegarde du joueur ${userId} a bien été supprimée !!`);

@@ -1,5 +1,4 @@
 import  {ChangeEvent, useEffect, useState } from "react";
-
 import { chargerId, isFoundMovie, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";
 import {v4 as uuidv4} from "uuid";
 import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/type-data";
@@ -57,9 +56,6 @@ function Tests(){
         const films = joueurData.filmsTrouves;
 
         const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, films));
-      
-        
-        console.log("Films trouvés par le joueur :", joueurData);
         /*
         const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerFilmBruteEnFilmJeu(movie));
         const tableauDesFilmsDuJeu = tableauDesFilmsBruts.map((movie) => transformerUnFilmBruteEnFilmJeu(movie, films));
@@ -106,6 +102,8 @@ function Tests(){
         //met à jour les films 
         const resetMovies = movies.map((movie) => ({...movie,aEteTrouve: false}))
         setMovies(resetMovies)
+        setScore(0)
+        setScoreState(false)
       }catch (error){
         alert (error)
       }
@@ -117,10 +115,9 @@ function Tests(){
     useEffect(() =>{
         const filteredMovies = movies.filter((film) => film.aEteTrouve);
         const foundMovies = filteredMovies.map((film) => (film.titreOriginal))
-        console.log("foundMovies : ", foundMovies)
-        console.log("filteredMovies : ", filteredMovies)
         setFilmsFound(foundMovies)
         setScore(filteredMovies.length)
+
     }, [movies])
 
     useEffect(() =>{
@@ -134,9 +131,6 @@ function Tests(){
         if(scoreState === true && filmsFound && playerId){
           sendScoreToServer(score, filmsFound, playerId)
         }
-        // console.log("vrai score : ", score)
-        // console.log("lesFilmsEnvoyer : ",filmsFound )
-        // console.log("le score envoyer : ", score)
     }, [filmsFound, playerId, score, scoreState])
   
     return (
