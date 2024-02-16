@@ -2,20 +2,70 @@
 je veux verifie les donnees recuperer avant de les enregistrer dans le cache
 
  // Vérifier si les données reçues sont valides avant de les enregistrer dans le cache
-  if (!playerId || !score || !filmsFound || typeof score !== 'number' || !Array.isArray(filmsFound)) {
-    return res.status(400).send('Données invalides');
-  }
-  
-
-  // Vérifier si les données ne sont pas vides
-  if (filmsFound.length === 0) {
-    return res.status(400).send('Films trouvés non définis');
-  }
-
-  // Vérifier si les films trouvés par le joueur sont valides
-  const invalidFilms = filmsFound.filter(film => typeof film !== 'string' || film.trim() === '');
-  if (invalidFilms.length > 0) {
-    return res.status(400).send('Films trouvés invalides');
-  }
+ 
   nous vérifions d'abord si unLoadedFoundMovies est défini avant d'utiliser find sur celui-ci. Si unLoadedFoundMovies est undefined, nous retournons également undefined pour filmCharge.
-*/
+
+import {io} from "socket.io-client"
+
+// Importer la clé API depuis le fichier .env
+const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
+const socket = io("http://localhost:3100");
+socket.on("connect", () => {
+  console.log(socket.connected); // true
+});
+useEffect(() => {
+  socket.on("event_name", (score) => {
+    console.log("Donnees reçues du serveur :", score);
+  });
+
+  // Nettoyez le listener 
+  return () => {
+    socket.off("event_name");
+  };
+}, []);
+useEffect(() => {
+      if(scoreState === true && playerId) {
+        socket.emit("updateScore", { playerId, score });
+        console.log("donnee envoye au serveur ")
+      }
+    }, [playerId, score, scoreState])
+    //server
+    import { Server, Socket } from "socket.io"
+import { createServer } from "http";
+
+const app = express();
+const cacheFile = "./cache.json";
+const server = createServer(app)
+//const io = new Server(server); 
+app.use(cors());
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  }
+});
+io.on("connection", (socket: Socket) => {
+  console.log("Un client s'est connecte :", socket.id);
+
+  socket.on("updateScore", ({ playerId, score }) => {
+    if(toutesLesSauvegardesParUtilisateur[playerId]) {
+      // Mettez a jour le score du joueur dans les donnees sauvegardees
+      toutesLesSauvegardesParUtilisateur[playerId].score = score;
+       // Sauvegardez les donnees mises a jour dans le fichier
+       saveCache(toutesLesSauvegardesParUtilisateur);
+  
+       // Envoyez le score mis a jour a tous les clients connectes
+       io.emit("event_name", { playerId, score });
+    }
+  })
+});
+// app.listen(3100, () => {
+//   console.log("server started");
+// });
+
+server.listen(3100, () => {
+  console.log("Server started");
+});
+
+  */
