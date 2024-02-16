@@ -1,0 +1,66 @@
+.logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+}
+.logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+}
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+/* */
+
+h2 {
+    margin: 17px;
+    padding: 10px;
+    font-size: 25px;
+    color: black;
+}
+
+.movie-title {
+    margin: 3px;
+    padding: 5px;
+}
+
+.page-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.searchMovie {
+    display: inline-block;
+    width: 910px;
+    margin: 20px;
+}
+input[type='text'] {
+    width: 700px;
+    height: 48px;
+    border: none;
+}
+
+.film-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    background-color: #ffffff;
+    padding: 10px;
+    /* margin: 10px; */
+    width: 910px;
+}
+

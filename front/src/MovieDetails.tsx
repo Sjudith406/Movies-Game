@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { FilmJeuDetails, company, TMDBMovieDetailsResponse } from "./models/type-data"
+import { FilmJeuDetails, Company, TMDBMovieDetailsResponse } from "./models/Movie.model"
 import "./styles/MovieDetails.css"
 import { useParams } from 'react-router-dom';
 import { transformerUnTMDBMovieDetailsResponseEnFilmJeuDetails } from './fonctions/function-utils';
@@ -12,7 +12,7 @@ function MovieDetails() {
 const {movieID} = useParams()
 
     const [moviesDetails, setMoviesDetails] = useState<FilmJeuDetails>();
-    const [companiesMovie, setcompaniesMovie] = useState<company[]>([])
+    const [companiesMovie, setcompaniesMovie] = useState<Company[]>([])
 
      // Importer la clé API depuis le fichier .env
       const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
@@ -77,7 +77,7 @@ if(moviesDetails === undefined){
 }
 
 type CompaniesComponentProps = {
-  production:company
+  production:Company
 }
 
 const CompaniesComponent: FC<CompaniesComponentProps> = ({production}) => {

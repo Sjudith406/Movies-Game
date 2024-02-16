@@ -16,7 +16,7 @@ app.use(express.json());
 /**
  * charger les donnees du cache depuis le fichier lors du demarrage du serveur
  */
-const Chager = () => {
+const Charger = () => {
   try {
     const cacheData = fs.readFileSync(cacheFile, "utf8");
     return JSON.parse(cacheData);
@@ -25,7 +25,7 @@ const Chager = () => {
     return {};
   }
 };
-const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Chager();
+const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Charger();
 
 /**
  * sauvegarder les donnees du cache dans le fichier

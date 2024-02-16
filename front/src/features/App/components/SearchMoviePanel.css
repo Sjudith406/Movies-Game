@@ -1,0 +1,27 @@
+.btn-restart {
+    width: 200px;
+    height: 48px;
+    border: none;
+    padding: 8px;
+    margin: 0px 0px 0px 5px;
+    color: #ffffff;
+    background-color: rgb(3, 3, 59);
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.75);
+    text-shadow: 0px 0px 5px #ffffff;
+}
+.btn-restart:active {
+    color: #c0c0c0;
+    background-color: rgb(65, 65, 159);
+    box-shadow: inset 0px 0px 13px 0px rgba(0, 0, 0, 0.75);
+    text-shadow: none;
+}
+
+.search-bar {
+    background-color: #f4f4f4;
+    padding: 8px 8px 6px 8px;
+    margin: 10px 5px 10px 0px;
+    max-width: 800px;
+}

@@ -1,5 +1,5 @@
-import {FilmBrute, FilmJeu} from "../models/type-data"
-import { FilmJeuDetails, TMDBMovieDetailsResponse } from "../models/type-data"
+import {FilmBrute, FilmJeu} from "../models/Movie.model"
+import { FilmJeuDetails, TMDBMovieDetailsResponse } from "../models/Movie.model"
 
 const debutURLaffichagePoster = "https://image.tmdb.org/t/p/w185";
 const debutURLaffichagePosterDetails = "https://image.tmdb.org/t/p/w342";

@@ -1,5 +1,5 @@
 import  {  ChangeEvent, FC, useEffect, useState } from "react";
-import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/type-data"
+import { DonneeSauvegarder, FilmJeu, TMDBMovieResponse } from "./models/Movie.model"
 import "./styles/App.css";
 import { Link } from "react-router-dom";
 import { chargerId, isFoundMovie, sauvegarderId, transformerUnFilmBruteEnFilmJeu } from "./fonctions/function-utils";

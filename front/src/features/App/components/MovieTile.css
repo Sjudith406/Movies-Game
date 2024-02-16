@@ -1,0 +1,21 @@
+.blur {
+    filter: blur(8px);
+}
+
+.grid-item {
+    width: 200px;
+    padding: 15px;
+    height: 400px;
+}
+
+.movie-title {
+    margin: 3px;
+    padding: 5px;
+    font-family: monospace;
+}
+
+.poster {
+    transition-duration: 225ms;
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+}
