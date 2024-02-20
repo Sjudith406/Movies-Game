@@ -68,4 +68,229 @@ server.listen(3100, () => {
   console.log("Server started");
 });
 
+/*"a97e7d53-9129-46d9-a514-5a361a2080cc":{"user":"a97e7d53-9129-46d9-a514-5a361a2080cc", "score":0, "filmsFound":[]}
+je veux verifie les donnees recuperer avant de les enregistrer dans le cache
+
+ // Vérifier si les données reçues sont valides avant de les enregistrer dans le cache
+ 
+  nous vérifions d'abord si unLoadedFoundMovies est défini avant d'utiliser find sur celui-ci. Si unLoadedFoundMovies est undefined, nous retournons également undefined pour filmCharge.
+
+import {io} from "socket.io-client"
+
+// Importer la clé API depuis le fichier .env
+const TMDB_KEY = import.meta.env.VITE_API_KEY_TMDB;
+const socket = io("http://localhost:3100");
+socket.on("connect", () => {
+  console.log(socket.connected); // true
+});
+useEffect(() => {
+  socket.on("event_name", (score) => {
+    console.log("Donnees reçues du serveur :", score);
+  });
+
+  // Nettoyez le listener 
+  return () => {
+    socket.off("event_name");
+  };
+}, []);
+useEffect(() => {
+      if(scoreState === true && playerId) {
+        socket.emit("updateScore", { playerId, score });
+        console.log("donnee envoye au serveur ")
+      }
+    }, [playerId, score, scoreState])
+    //server
+    import { Server, Socket } from "socket.io"
+import { createServer } from "http";
+
+const app = express();
+const cacheFile = "./cache.json";
+const server = createServer(app)
+//const io = new Server(server); 
+app.use(cors());
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  }
+});
+io.on("connection", (socket: Socket) => {
+  console.log("Un client s'est connecte :", socket.id);
+
+  socket.on("updateScore", ({ playerId, score }) => {
+    if(toutesLesSauvegardesParUtilisateur[playerId]) {
+      // Mettez a jour le score du joueur dans les donnees sauvegardees
+      toutesLesSauvegardesParUtilisateur[playerId].score = score;
+       // Sauvegardez les donnees mises a jour dans le fichier
+       saveCache(toutesLesSauvegardesParUtilisateur);
+  
+       // Envoyez le score mis a jour a tous les clients connectes
+       io.emit("event_name", { playerId, score });
+    }
+  })
+});
+// app.listen(3100, () => {
+//   console.log("server started");
+// });
+
+server.listen(3100, () => {
+  console.log("Server started");
+});
+//app.ts
+
+import express from "express";
+// import apiRoute from './routes/api.Route'
+import fs from "fs";
+import cors from "cors";
+import { Sauvegarde } from "./models/typeData";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+
+const app = express();
+const cacheFile = "./cache.json";
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173"
+  }
+});
+
+app.use(cors());
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+// parse application/json
+app.use(express.json());
+
+//io.on("connection", (socket) => console.log("socket connected"))
+
+/**
+ * charger les donnees du cache depuis le fichier lors du demarrage du serveur
+ *
+const Charger = () => {
+  try {
+    const cacheData = fs.readFileSync(cacheFile, "utf8");
+    return JSON.parse(cacheData);
+  } catch (error) {
+    console.error(" erreur lors du chargement du cache : ", error);
+    return {};
+  }
+};
+const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Charger();
+
+/**
+ * sauvegarder les donnees du cache dans le fichier
+ * @param lesSauvegardes
+ *
+const saveCache = (lesSauvegardes: Record<string, Sauvegarde>) => {
+  try {
+    const donneesConvertis = JSON.stringify(lesSauvegardes, null, 4);
+    fs.writeFileSync(cacheFile, donneesConvertis, "utf8");
+    console.log("Données du cache enregistrées avec succès !");
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement du cache :", error);
+  }
+};
+
+app.use(express.static("../front/dist"));
+
+/**
+ * donnee recu du client
+ *
+app.post("/api/score", (req, res) => {
+  const { playerId, score, filmsFound } = req.body;
+  console.log(req.body);
+
+  // verifie si les données recues sont valides avant de les enregistrer dans le cache
+  if (
+    !playerId ||
+    !score ||
+    !filmsFound ||
+    typeof score !== "number" ||
+    !Array.isArray(filmsFound)
+  ) {
+    return res.status(400).send("Les donnees envoyees sont invalides");
+  }
+
+  const uneSauvegarde: Sauvegarde = {
+    user: playerId,
+    score: score,
+    filmsTrouves: filmsFound,
+  };
+   //je verifie si une sauvegarde correspond a la nouvelle.
+const donneesDifferents = JSON.stringify(toutesLesSauvegardesParUtilisateur[playerId]) !== JSON.stringify(uneSauvegarde);
+  if(donneesDifferents){
+    toutesLesSauvegardesParUtilisateur[playerId] = uneSauvegarde
+    saveCache(toutesLesSauvegardesParUtilisateur);
+  io.emit("score_joueur", { score, filmsFound });
+  
+  //console.log("id stocké est : ", toutesLesSauvegardesParUtilisateur);
+  res.status(200).send("reponse recu !!");
+  } else {
+    res.status(200).send("il n'y a aucun changement !!");
+  }
+});
+
+/**
+ * reponse envoyer au client
+ *
+app.get("/api/score/:userID", (req, res) => {
+  const userID = req.params.userID;
+  const laSauvegarde = toutesLesSauvegardesParUtilisateur[userID];
+  if (!laSauvegarde) {
+    // Si ID n'existe pas je renvoi ca
+    const noData: Sauvegarde = {
+      user: userID,
+      score: 0,
+      filmsTrouves: [],
+    };
+    //return res.status(400).send('PTDR T KI')
+    return res.status(200).json(noData);
+  }
+  res.status(200).json(laSauvegarde);
+});
+
+/**
+ * supprimer les donnees du joueur
+ *
+app.delete("/api/score/:userID", (req, res) => {
+  const userId = req.params.userID;
+  const sauvegardeDuJoueur = toutesLesSauvegardesParUtilisateur[userId];
+  //Je verifie si l'utilisateur existe et s'il a une sauvegarde enrégistrer
+  if (!sauvegardeDuJoueur) {
+    return res.status(400).send("Le joueur n'a aucune sauvegarde !!!");
+  }
+  //si l'utilisateur a bien une sauvegarde je le supprime
+  delete toutesLesSauvegardesParUtilisateur[userId];
+
+  //j'enrégistre la nouvelle mis à jour des données
+  saveCache(toutesLesSauvegardesParUtilisateur);
+  res
+    .status(200)
+    .send(`La sauvegarde du joueur ${userId} a bien été supprimée !!`);
+});
+// app.listen(3100, () => {
+//   console.log("server started");
+// });
+httpServer.listen(3100, () => {
+  console.log("Server started");
+});
+
+useEffect(() => {
+        socket.on("score_joueur", ({score, filmsFound}:SyncScoreData ) => {
+          console.log("Donnees reçues du serveur :", score);
+          setScore(score)
+          setMovies(previous => {
+            return previous.map(isFoundMovieV2(filmsFound))
+          })
+        });
+      
+        // Nettoyez le listener 
+        return () => {
+          socket.off("score_joueur");
+        };
+      }, []);
   */
+
+
+
