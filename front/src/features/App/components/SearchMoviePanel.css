@@ -1,27 +1,36 @@
-.btn-restart {
-    width: 200px;
+
+.validerProposition {
+    width: 150px;
     height: 48px;
-    border: none;
     padding: 8px;
+    cursor: pointer;
+    border: none;
     margin: 0px 0px 0px 5px;
-    color: #ffffff;
-    background-color: rgb(3, 3, 59);
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 5px;
-    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.75);
-    text-shadow: 0px 0px 5px #ffffff;
+    color: #fff;
+    background-color: #8c1f1e;
+    outline: none;
+    text-align: center;
+    font-size: 19px;
+    border-radius: 4px;
+    box-shadow: 0 3px #6f6f6fd2;
 }
-.btn-restart:active {
-    color: #c0c0c0;
-    background-color: rgb(65, 65, 159);
-    box-shadow: inset 0px 0px 13px 0px rgba(0, 0, 0, 0.75);
-    text-shadow: none;
+
+.validerProposition:active {
+    background-color: #b92a27;
+    box-shadow: 0 2px #7a7a7af1;
+    font-weight: bold;
+    transform: translateY(2px);
 }
 
 .search-bar {
     background-color: #f4f4f4;
     padding: 8px 8px 6px 8px;
     margin: 10px 5px 10px 0px;
-    max-width: 800px;
+    max-width: 900px;
+}
+
+input[type='text'] {
+    width: 750px;
+    height: 48px;
+    border: none;
 }

@@ -1,10 +1,10 @@
-import React from 'react'
+
 import './SearchMoviePanel.css'
 
 type SearchMoviePanelProps = {
     text: string
     disabled: boolean
-    onReset: () => void
+    onSubmit: () => void
     onTextChange: (text: string) => void
 }
 
@@ -19,11 +19,12 @@ const SearchMoviePanel = (props: SearchMoviePanelProps) => {
                 disabled={props.disabled}
                 onChange={(event) => props.onTextChange(event.target.value)}
             />
-            <button
-                className='btn-restart'
-                onClick={props.onReset}
-            >
-                recommencer
+            <button 
+                className="validerProposition"
+                onClick={props.onSubmit}
+            >   
+                valider
+
             </button>
         </>
     )
