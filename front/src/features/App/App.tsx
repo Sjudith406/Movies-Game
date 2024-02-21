@@ -77,7 +77,7 @@ function Tests() {
 
     useEffect(() => {
         //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
-        if (scoreState === true && filmsFound && playerId && userName) {
+        if (scoreState === true && filmsFound && playerId) {
             saveGame(playerId, userName, score, filmsFound)
         }
     }, [filmsFound, playerId, score, scoreState, userName])
@@ -167,7 +167,7 @@ function Tests() {
                         <input
                         type="text"
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        onChange={(event) => setUserName(event.target.value)}
                         />
                         <button onClick={handlePopupSubmit}>Valider</button>
                     </div>

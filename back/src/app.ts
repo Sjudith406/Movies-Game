@@ -25,7 +25,8 @@ const Charger = () => {
     return {};
   }
 };
-const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> = Charger();
+const toutesLesSauvegardesParUtilisateur: Record<string, Sauvegarde> =
+  Charger();
 
 /**
  * sauvegarder les donnees du cache dans le fichier
@@ -64,8 +65,10 @@ app.post("/api/donnees", (req, res) => {
 
   // Vérifier si un pseudo est déjà enregistré pour cet UUID
   const existingSave = toutesLesSauvegardesParUtilisateur[playerId];
-  if (existingSave && existingSave.name !== '') {
-    return res.status(400).send(`Un pseudo est déjà enregistré pour ${playerId}`);
+  if (existingSave && existingSave.name !== "") {
+    return res
+      .status(400)
+      .send(`Un pseudo est déjà enregistré pour ${playerId}`);
   }
 
   const uneSauvegarde: Sauvegarde = {
