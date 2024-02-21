@@ -20,9 +20,12 @@ function Tests() {
     const [score, setScore] = useState<number>(0)
     const [scoreState, setScoreState] = useState<boolean>(false)
     const [message, setMessage] = useState<string>('')
+    const [showPopup, setShowPopup] = useState<boolean>(true);
+    const [userName, setUserName] = useState<string>('');
     /**
      * identifiaant du joueur
      */
+
     useEffect(() => {
         if (playerId === '') {
             const newP = uuidv4()
@@ -74,10 +77,10 @@ function Tests() {
 
     useEffect(() => {
         //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
-        if (scoreState === true && filmsFound && playerId) {
-            saveGame(score, filmsFound, playerId)
+        if (scoreState === true && filmsFound && playerId && userName) {
+            saveGame(playerId, userName, score, filmsFound)
         }
-    }, [filmsFound, playerId, score, scoreState])
+    }, [filmsFound, playerId, score, scoreState, userName])
 
     //bouton recommencer
     const handleClickReset = useCallback(async () => {
@@ -96,7 +99,10 @@ function Tests() {
         }
     }, [movies, playerId])
 
-
+    const handlePopupSubmit = () => {
+        // Masquer le popup
+        setShowPopup(false);
+      };
     /**
      * récupération titre saisis
      * @param event
@@ -147,12 +153,26 @@ function Tests() {
             </p>
         )
     }, [score, movies.length])
+
     return (
         <>
             <div className='page-body'>
             <button className='btn-restart' onClick={handleClickReset}>recommencer</button>
                 <h2 className='page-title'> Devine le Film à l'affiche !</h2>
                 <div className='score'>{scoreDisplay}</div>
+
+                {showPopup && (
+                    <div className="popup">
+                        <h3>Choisissez votre pseudo :</h3>
+                        <input
+                        type="text"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        />
+                        <button onClick={handlePopupSubmit}>Valider</button>
+                    </div>
+                )}
+
                 <div className='searchMovie'>
                     <SearchMoviePanel
                         text={titleInput}

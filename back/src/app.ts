@@ -46,13 +46,14 @@ app.use(express.static("../front/dist"));
 /**
  * donnee recu du client
  */
-app.post("/api/score", (req, res) => {
-  const { playerId, score, filmsFound } = req.body;
-  console.log(req.body);
+app.post("/api/donnees", (req, res) => {
+  const { playerId, userName, score, filmsFound } = req.body;
+  console.log("coco: ", req.body);
 
   // verifie si les données recues sont valides avant de les enregistrer dans le cache
   if (
     !playerId ||
+    !userName ||
     !score ||
     !filmsFound ||
     typeof score !== "number" ||
@@ -61,8 +62,15 @@ app.post("/api/score", (req, res) => {
     return res.status(400).send("Les donnees envoyees sont invalides");
   }
 
+  // Vérifier si un pseudo est déjà enregistré pour cet UUID
+  const existingSave = toutesLesSauvegardesParUtilisateur[playerId];
+  if (existingSave && existingSave.name !== '') {
+    return res.status(400).send(`Un pseudo est déjà enregistré pour ${playerId}`);
+  }
+
   const uneSauvegarde: Sauvegarde = {
     user: playerId,
+    name: userName,
     score: score,
     filmsTrouves: filmsFound,
   };
@@ -76,13 +84,14 @@ app.post("/api/score", (req, res) => {
 /**
  * reponse envoyer au client
  */
-app.get("/api/score/:userID", (req, res) => {
+app.get("/api/donnees/:userID", (req, res) => {
   const userID = req.params.userID;
   const laSauvegarde = toutesLesSauvegardesParUtilisateur[userID];
   if (!laSauvegarde) {
     // Si ID n'existe pas je renvoi ca
     const noData: Sauvegarde = {
       user: userID,
+      name: "",
       score: 0,
       filmsTrouves: [],
     };
@@ -95,7 +104,7 @@ app.get("/api/score/:userID", (req, res) => {
 /**
  * supprimer les donnees du joueur
  */
-app.delete("/api/score/:userID", (req, res) => {
+app.delete("/api/donnees/:userID", (req, res) => {
   const userId = req.params.userID;
   const sauvegardeDuJoueur = toutesLesSauvegardesParUtilisateur[userId];
   //Je verifie si l'utilisateur existe et s'il a une sauvegarde enrégistrer
@@ -111,6 +120,7 @@ app.delete("/api/score/:userID", (req, res) => {
     .status(200)
     .send(`La sauvegarde du joueur ${userId} a bien été supprimée !!`);
 });
+
 app.listen(3100, () => {
   console.log("server started");
 });

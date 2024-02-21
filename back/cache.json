@@ -1,39 +1,9 @@
 {
-    "c4d4a23f-a2eb-4148-8aba-1d528e7e3086": {
-        "user": "c4d4a23f-a2eb-4148-8aba-1d528e7e3086",
-        "score": 3,
-        "filmsTrouves": [
-            "Badland Hunters",
-            "Wonka",
-            "Soixante minutes"
-        ]
-    },
     "f4ce237c-1585-4d51-a7ff-eb0088af805c": {
         "user": "f4ce237c-1585-4d51-a7ff-eb0088af805c",
-        "score": 2,
+        "score": 1,
         "filmsTrouves": [
-            "Wonka",
-            "En plein vol"
-        ]
-    },
-    "c7f87bc1-4cbd-4c14-afb4-f0dc74a3d1aa": {
-        "user": "c7f87bc1-4cbd-4c14-afb4-f0dc74a3d1aa",
-        "score": 6,
-        "filmsTrouves": [
-            "Badland Hunters",
-            "Madame Web",
-            "The Beekeeper",
-            "Role Play",
-            "Pauvres créatures",
-            "Le garçon et le héron"
-        ]
-    },
-    "4f32dfa3-3a7f-42fc-b27f-0c6e75ad53c4": {
-        "user": "4f32dfa3-3a7f-42fc-b27f-0c6e75ad53c4",
-        "score": 2,
-        "filmsTrouves": [
-            "Wonka",
-            "Migration"
+            "Wonka"
         ]
     }
 }

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Tests from './features/App/App.tsx';
 import  MovieDetails from './MovieDetails.tsx'
 
+
 // Définit un composant fonctionnel AppRouter qui
 // Renvoie une structure de routage basée sur React Router
 const AppRouter = () => {
@@ -11,6 +12,7 @@ const AppRouter = () => {
     <Router>
        <Routes>
         {/* Définit qui spécifie le composant à rendre lorsque l'URL correspond au chemin spécifié  */}
+        {/* <Route path='/' element={<PopUpName />} /> */}
         <Route path="/" element={<Tests />} />
         <Route path="/movie/:movieID" element={<MovieDetails />} />
        </Routes>

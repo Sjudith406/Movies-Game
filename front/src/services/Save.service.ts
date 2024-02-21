@@ -3,7 +3,7 @@ import { DonneeSauvegarder } from '../models/Movie.model'
 export const loadGame = async (playerID: string) => {
     // Récupérer les données du joueur
     const joueurResponse = await fetch(
-        `http://localhost:3100/api/score/${playerID}`
+        `http://localhost:3100/api/donnees/${playerID}`
     )
     if (joueurResponse.status !== 200) {
         console.log("je n'ai pas eu de reponse du serveur !!")
@@ -15,7 +15,7 @@ export const loadGame = async (playerID: string) => {
 
 export const resetGame = async (playerId: string) => {
     const supprimeCache = await fetch(
-        `http://localhost:3100/api/score/${playerId}`,
+        `http://localhost:3100/api/donnees/${playerId}`,
         {
             method: 'DELETE',
         }
@@ -27,20 +27,23 @@ export const resetGame = async (playerId: string) => {
 }
 
 /**
- * @param score
- * @param filmsFound
- * @param playerId
+ * 
+ * @param playerId 
+ * @param username 
+ * @param score 
+ * @param filmsFound 
  */
 export const saveGame = async (
+    playerId: string,
+    username: string,
     score: number,
-    filmsFound: string[],
-    playerId: string
+    filmsFound: string[]
 ) => {
     try {
-        const response = await fetch('http://localhost:3100/api/score', {
+        const response = await fetch('http://localhost:3100/api/donnees', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ score, filmsFound, playerId }),
+            body: JSON.stringify({ playerId, username, score, filmsFound }),
         })
         if (!response.ok) {
             throw new Error('Failed to send data to server')
