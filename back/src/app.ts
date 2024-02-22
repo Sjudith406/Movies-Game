@@ -49,7 +49,7 @@ app.use(express.static("../front/dist"));
  */
 app.post("/api/donnees", (req, res) => {
   const { playerId, userName, score, filmsFound } = req.body;
-  console.log("coco: ", req.body);
+  //console.log("coco: ", req.body);
 
   // verifie si les données recues sont valides avant de les enregistrer dans le cache
   if (
@@ -63,14 +63,6 @@ app.post("/api/donnees", (req, res) => {
     return res.status(400).send("Les donnees envoyees sont invalides");
   }
 
-  // Vérifier si un pseudo est déjà enregistré pour cet UUID
-  const existingSave = toutesLesSauvegardesParUtilisateur[playerId];
-  if (existingSave && existingSave.name !== "") {
-    return res
-      .status(400)
-      .send(`Un pseudo est déjà enregistré pour ${playerId}`);
-  }
-
   const uneSauvegarde: Sauvegarde = {
     user: playerId,
     name: userName,
@@ -79,6 +71,15 @@ app.post("/api/donnees", (req, res) => {
   };
 
   toutesLesSauvegardesParUtilisateur[playerId] = uneSauvegarde;
+
+  // Vérifier si un pseudo est déjà enregistré pour cet UUID
+  // const existingSave = toutesLesSauvegardesParUtilisateur[playerId];
+  // if (existingSave && existingSave.name !== "") {
+  //   return res
+  //     .status(400)
+  //     .send(`Un pseudo est déjà enregistré pour ${playerId}`);
+  // }
+
   saveCache(toutesLesSauvegardesParUtilisateur);
   //console.log("id stocké est : ", toutesLesSauvegardesParUtilisateur);
   res.status(200).send("reponse recu !!");

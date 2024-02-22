@@ -77,7 +77,7 @@ function Tests() {
 
     useEffect(() => {
         //si il n'y a aucune des parametre ou s'il n'y a pas de score ni de film ne rien envoyer
-        if (scoreState === true && filmsFound && playerId) {
+        if (scoreState === true && filmsFound && playerId && userName) {
             saveGame(playerId, userName, score, filmsFound)
         }
     }, [filmsFound, playerId, score, scoreState, userName])
