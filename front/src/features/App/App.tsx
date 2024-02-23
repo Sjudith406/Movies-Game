@@ -157,7 +157,7 @@ function Tests() {
     return (
         <>
             <div className='page-body'>
-            <button className='btn-restart' onClick={handleClickReset}>recommencer</button>
+            <button className='btn-restart' onClick={handleClickReset} disabled={filmsFound.length === 0}>recommencer</button>
                 <h2 className='page-title'> Devine le Film à l'affiche !</h2>
                 <div className='score'>{scoreDisplay}</div>
 
