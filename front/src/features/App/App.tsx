@@ -122,7 +122,7 @@ function Tests() {
 
         setTimeout(() => {
             setMessage('');
-        }, 800);
+        }, 6000);
         setMovies((previousValue) =>
                 previousValue.map(isFoundMovie(titleInput))
         )
@@ -165,11 +165,12 @@ function Tests() {
                     <div className="popup">
                         <h3>Choisissez votre pseudo :</h3>
                         <input
-                        type="text"
+                       
+                        className="pseudo"
                         value={userName}
                         onChange={(event) => setUserName(event.target.value)}
                         />
-                        <button onClick={handlePopupSubmit}>Valider</button>
+                        <button className="validerPseudo" onClick={handlePopupSubmit}>Valider</button>
                     </div>
                 )}
 

@@ -1,86 +1,120 @@
+var {
+  color: #c8364a;
+  color: #222020;
+  color: #6c6d6e;
+  color: #211e1f;
+  color: #8c1f1e;
+  color: #7f160f;
+  color: #972222;
+  color: #6f6f6f;
+  color: #8e1b2d;
+  color: #5f121e;
+}
+
 .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
 }
 .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 @keyframes logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-        animation: logo-spin infinite 20s linear;
-    }
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 /* */
 
 h2 {
-    margin: 17px;
-    padding: 10px;
-    font-size: 25px;
-    color: black;
+  margin: 17px;
+  padding: 10px;
+  font-size: 25px;
+  color: black;
 }
 
 .movie-title {
-    margin: 3px;
-    padding: 5px;
+  margin: 3px;
+  padding: 5px;
 }
 
 .page-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 .searchMovie {
-    display: inline-block;
-    width: 910px;
-    margin: 20px;
+  display: inline-block;
+  width: 910px;
+  margin: 20px;
 }
 
 .film-container {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    background-color: #ffffff;
-    padding: 10px;
-    /* margin: 10px; */
-    width: 910px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background-color: #ffffff;
+  padding: 10px;
+  /* margin: 10px; */
+  width: 910px;
 }
 
 .btn-restart {
-    width: 200px;
-    height: 48px;
-    border: none;
-    padding: 8px;
-    color: #ffffff;
-    background-color: #03033b;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 5px;
-    /*box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.75);*/
-    margin-left: auto;
-    margin-top: 5px;
+  width: 200px;
+  height: 48px;
+  border: none;
+  padding: 8px;
+  color: #ffffff;
+  background-color: #03033b;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  /*box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.75);*/
+  margin-left: auto;
+  margin-right: 5px;
+  margin-top: 5px;
 }
 .btn-restart:active {
-    color: #fff;
-    background-color: #001952;
-    box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
-    text-shadow: none;
+  color: #fff;
+  background-color: #001952;
+  box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  text-shadow: none;
 }
 
 .messageAfficher {
-    margin-bottom: 10px;
-    color: rgb(0, 146, 0);
+  margin-bottom: 10px;
+  color: rgb(0, 146, 0);
+}
+
+input {
+  width: 300px;
+  height: 44px;
+  border: none;
+}
+
+.pseudo {
+  padding: 3px;
+  margin: 3px 5px 3px 0px;
+}
+
+.validerPseudo {
+  height: 43px;
+  width: 90px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background-color: #8e1b2d;
 }
